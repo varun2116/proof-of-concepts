@@ -36,6 +36,15 @@ class LeafNode extends Component {
     this.props.updateTree({});
   };
 
+  /**
+   * Edits Child Name
+   */
+  onEditChild = (name) => {
+    let data = this.state.data;
+    data.name = name;
+    this.props.updateTree(data);
+  };
+
   render() {
     const {
       data: { name },
@@ -46,6 +55,7 @@ class LeafNode extends Component {
           name={name}
           onAddChild={this.onAddChild}
           onDeleteChild={this.onDeleteChild}
+          onEditChild={this.onEditChild}
         />
       </div>
     );

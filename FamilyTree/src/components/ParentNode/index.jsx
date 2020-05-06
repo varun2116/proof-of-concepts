@@ -1,4 +1,4 @@
-import { uniqueId, isNil, map, isEmpty } from "lodash";
+import { uniqueId, isNil, map, isEmpty, get } from "lodash";
 import React, { Component } from "react";
 import LeafNode from "../LeafNode";
 import NodeDetails from "../NodeDetails";
@@ -16,7 +16,7 @@ class ParentNode extends Component {
    */
   onAddChild = (child) => {
     let treeData = this.state.data;
-    treeData.children = [...treeData.children, child];
+    treeData.children = [...get(treeData, "children", []), child];
     this.setState({
       data: treeData,
     });
@@ -42,6 +42,9 @@ class ParentNode extends Component {
       treeData.children[atIndex] = data;
     } else {
       treeData.children.splice(atIndex, 1);
+      if (isEmpty(treeData.children)) {
+        delete treeData.children;
+      }
     }
     this.setState({
       data: treeData,
@@ -49,10 +52,20 @@ class ParentNode extends Component {
     this.props.updateTree(treeData);
   };
 
+  /**
+   * Edits Child Name
+   */
+  onEditChild = (name) => {
+    let data = this.state.data;
+    data.name = name;
+    this.props.updateTree(data);
+  };
+
   render() {
     const {
       data: { name, children },
     } = this.state;
+    const { isRoot = false } = this.props;
 
     return (
       <div className="node">
@@ -60,6 +73,8 @@ class ParentNode extends Component {
           name={name}
           onAddChild={this.onAddChild}
           onDeleteChild={this.onDeleteChild}
+          isRoot={isRoot}
+          onEditChild={this.onEditChild}
         />
         <div className="node-list">
           {map(children, (ele, idx) => {

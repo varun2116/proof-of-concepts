@@ -12,7 +12,7 @@ class FamilyTree extends Component {
   }
 
   /**
-   * Update state tree at the index 
+   * Update state tree at the index
    */
   updateTree = (data, atIndex) => {
     let treeData = this.state.tree;
@@ -33,6 +33,7 @@ class FamilyTree extends Component {
                 key={uniqueId("parent-")}
                 data={ele}
                 updateTree={(data) => this.updateTree(data, idx)}
+                isRoot={true}
               />
             ))}
           </div>

@@ -4,6 +4,9 @@
 }
 .App {
   text-align: center;
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
 }
 
 .family-tree {
@@ -12,17 +15,22 @@
 }
 
 .node-list {
+  display: flex;
   padding-top: 20px; 
   position: relative;	
 	transition: all 0.5s;
 }
 
 .node {
-	float: left; text-align: center;
-	list-style-type: none;
+  /* float: left;  */
+  text-align: center;
 	position: relative;
 	padding: 20px 5px 0 5px;	
 	transition: all 0.5s;
+}
+
+.node + .node {
+  padding-left: 0;
 }
 
 /*We will use ::before and ::after to draw the connectors*/
@@ -77,15 +85,26 @@
 }
 
 .node-details{
+  display: inline-flex;
+  flex-direction: column;
+  width: 150px;
+  box-sizing: border-box;
 	border: 1px solid #ccc;
 	padding: 5px 10px;
 	text-decoration: none;
 	color: #666;
 	font-family: arial, verdana, tahoma;
-	font-size: 11px;
-	display: inline-block;
+	font-size: 14px;
 	border-radius: 5px;	
-	transition: all 0.5s;
+  transition: all 0.5s;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16),
+  0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  word-wrap: break-word;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-around;
 }
 
 .modal {
@@ -163,7 +182,7 @@
 }
 
 .button {
-  padding: 10px 26px;
+  padding: 10px 10px;
   border: 0;
   cursor: pointer;
   font-size: 14px;
@@ -215,7 +234,6 @@ element.style {
 }
 .form-control {
   display: block;
-  /* width: 100%; */
   padding: .375rem .75rem;
   font-size: 1rem;
   line-height: 1.5;

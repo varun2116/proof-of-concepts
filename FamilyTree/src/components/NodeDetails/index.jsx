@@ -1,24 +1,34 @@
 import { isEmpty } from "lodash";
-import React, { useRef, useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import React, { useRef, useState, useEffect } from "react";
+import { FaPlus, FaPen } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import Modal from "../Modal";
 
-const NodeDetails = ({ name, onAddChild, onDeleteChild }) => {
-  const [showAddModal, setShowAddModal] = useState(false);
+const NodeDetails = ({
+  name,
+  onAddChild,
+  onDeleteChild,
+  onEditChild,
+  isRoot,
+}) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
   const inputRef = useRef();
+
+  useEffect(() => {
+    if (showEdit) {
+      inputRef.current.focus();
+    }
+  });
 
   /**
    * On Add Modal Submit
    */
   const onAdd = () => {
-    if (!isEmpty(inputRef.current.value)) {
-      onAddChild({
-        name: inputRef.current.value,
-      });
-      setShowAddModal(false);
-    }
+    onAddChild({
+      name: "Name",
+    });
+    // setShowAddModal(false);
   };
 
   /**
@@ -26,45 +36,61 @@ const NodeDetails = ({ name, onAddChild, onDeleteChild }) => {
    */
   const onDelete = () => {
     onDeleteChild();
-  }
+  };
+
+  /**
+   * On Edit Name
+   */
+  const onEdit = (e) => {
+    try {
+      if (!isEmpty(inputRef.current.value)) {
+        onEditChild(inputRef.current.value);
+        setShowEdit(false);
+      }
+    } catch (error) {}
+  };
 
   return (
     <React.Fragment>
       <div className="node-details">
-        <p>{name}</p>
-        <button
-          className="button button-default"
-          onClick={() => setShowAddModal(true)}
-        >
-          <FaPlus />
-        </button>
-        <button
-          className="button button-delete"
-          onClick={() => setShowDeleteModal(true)}
-        >
-          <MdDelete />
-        </button>
-      </div>
-
-      <Modal show={showAddModal}>
-        <div className="modal-header">
-          <div className="modal-title">Add Child</div>
-        </div>
-        <div className="modal-body">
-          <input type="text" className="form-control" ref={inputRef} />
-        </div>
-        <div className="modal-footer">
-          <button className="button button-primary" onClick={() => onAdd()}>
-            Add
-          </button>
+        {!showEdit && <p>{name}</p>}
+        {showEdit && (
+          <input
+            type="text"
+            className="form-control"
+            defaultValue={name}
+            ref={inputRef}
+            onBlur={onEdit}
+          />
+        )}
+        <div className="actions">
           <button
-            className="button button-cancel"
-            onClick={() => setShowAddModal(false)}
+            type="button"
+            className="button button-default"
+            onClick={() => setShowEdit(true)}
           >
-            Cancel
+            <FaPen />
           </button>
+
+          <button
+            type="button"
+            className="button button-default"
+            onClick={() => onAdd()}
+          >
+            <FaPlus />
+          </button>
+
+          {!isRoot && (
+            <button
+              type="button"
+              className="button button-delete"
+              onClick={() => setShowDeleteModal(true)}
+            >
+              <MdDelete />
+            </button>
+          )}
         </div>
-      </Modal>
+      </div>
 
       <Modal show={showDeleteModal}>
         <div className="modal-header">
